@@ -41,7 +41,7 @@ class UploadController extends Controller
 
             $client = new Client();
             try {
-                $response = $client->request('POST', 'http://app2.example.com/api/endpoint', [
+                $response = $client->request('POST', 'http://test.yayasan-almuttaqien.or.id/api/receive-data/', [
                     'headers' => [
                         'Authorization' => 'Bearer your_api_token',
                         'Accept'        => 'application/json',
