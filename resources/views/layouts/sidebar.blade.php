@@ -93,6 +93,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('upload.index') }}" class="nav-link">
+                        <!-- Menggunakan ikon download dengan FontAwesome 5 -->
+                        <i class="nav-icon fas fa-upload"></i>
+                        <p>Upload file</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/maps" class="nav-link">
                         <!-- Menggunakan ikon download dengan FontAwesome 5 -->
                         <i class="nav-icon fas fa-download"></i>

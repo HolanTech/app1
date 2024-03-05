@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\OtbPersiteNToNController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OtbPersiteNToNController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,13 +19,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/login');
+    return view('welcome');
 });
 
-Auth::routes();
 
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
-Route::get('/maps', [App\Http\Controllers\HomeController::class, 'show'])->name('maps');
-Route::resource('customer', CustomerController::class);
-Route::post('/customer/status/{id}', [CustomerController::class, 'changeStatus'])->name('customer.changeStatus');
-Route::resource('otb_persite_n_t_on', OtbPersiteNToNController::class);
+// Authentication Routes...
+Auth::routes(['verify' => true]); // Enable email verification if needed by adding 'verify' => true
+
+// Protected routes that require authentication
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::get('/maps', [HomeController::class, 'show'])->name('maps');
+
+    // Using the 'resource' method for CRUD operations on customers
+    Route::resource('customer', CustomerController::class);
+    // Route::resource harus diatas route khusus untuk menghindari conflict
+    Route::resource('upload', UploadController::class);
+    // Definisikan route untuk download secara terpisah
+    Route::get('upload/{upload}/download', [UploadController::class, 'download'])->name('upload.download');
+
+    // Additional route for changing customer status, with explicit binding
+    Route::post('/customer/status/{customer}', [CustomerController::class, 'changeStatus'])->name('customer.changeStatus');
+
+    // Resource route for OTB Persite N to N functionality
+    Route::resource('otb_persite_n_to_n', OtbPersiteNToNController::class);
+});
+
+// Additional configurations or route groups can be added below as needed
